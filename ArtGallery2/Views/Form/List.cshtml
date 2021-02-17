@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ArtGallery2.Models.Inventory.FormDto>
+
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>List</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.formName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.formName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.formId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.formId }) |
+            @Html.ActionLink("Delete", "DeleteConfirm", new { id=item.formId })
+        </td>
+    </tr>
+}
+
+</table>

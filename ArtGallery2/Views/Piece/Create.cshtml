@@ -1,0 +1,146 @@
+﻿@model ArtGallery2.Models.ViewModels.UpdatePiece
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+
+<h2>Create New Piece</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Piece</h4>
+    <hr />
+    @Html.ValidationSummary( true, "", new {
+        @class = "text-danger"
+    } )
+    <div class="form-group">
+        @Html.LabelFor( model => model.piece.pieceName, htmlAttributes: new {
+            @class = "control-label col-md-2"
+        } )
+        <div class="col-md-10">
+            @Html.EditorFor( model => model.piece.pieceName, new {
+                htmlAttributes = new {
+                    @class = "form-control"
+                }
+            } )
+            @Html.ValidationMessageFor( model => model.piece.pieceName, "", new {
+                @class = "text-danger"
+            } )
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor( model => model.piece.pieceDescription, htmlAttributes: new {
+            @class = "control-label col-md-2"
+        } )
+        <div class="col-md-10">
+            @Html.EditorFor( model => model.piece.pieceDescription, new {
+                htmlAttributes = new {
+                    @class = "form-control"
+                }
+            } )
+            @Html.ValidationMessageFor( model => model.piece.pieceDescription, "", new {
+                @class = "text-danger"
+            } )
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor( model => model.piece.length, htmlAttributes: new {
+            @class = "control-label col-md-2"
+        } )
+        <div class="col-md-10">
+            @Html.EditorFor( model => model.piece.length, new {
+                htmlAttributes = new {
+                    @class = "form-control"
+                }
+            } )
+            @Html.ValidationMessageFor( model => model.piece.length, "", new {
+                @class = "text-danger"
+            } )
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor( model => model.piece.width, htmlAttributes: new {
+            @class = "control-label col-md-2"
+        } )
+        <div class="col-md-10">
+            @Html.EditorFor( model => model.piece.width, new {
+                htmlAttributes = new {
+                    @class = "form-control"
+                }
+            } )
+            @Html.ValidationMessageFor( model => model.piece.width, "", new {
+                @class = "text-danger"
+            } )
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor( model => model.piece.height, htmlAttributes: new {
+            @class = "control-label col-md-2"
+        } )
+        <div class="col-md-10">
+            @Html.EditorFor( model => model.piece.height, new {
+                htmlAttributes = new {
+                    @class = "form-control"
+                }
+            } )
+            @Html.ValidationMessageFor( model => model.piece.height, "", new {
+                @class = "text-danger"
+            } )
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor( model => model.piece.piecePrice, htmlAttributes: new {
+            @class = "control-label col-md-2"
+        } )
+        <div class="col-md-10">
+            @Html.EditorFor( model => model.piece.piecePrice, new {
+                htmlAttributes = new {
+                    @class = "form-control"
+                }
+            } )
+            @Html.ValidationMessageFor( model => model.piece.piecePrice, "", new {
+                @class = "text-danger"
+            } )
+        </div>
+    </div>
+
+    <div class="form-group">
+        @{
+            var formListItems = new List<SelectListItem>();
+            foreach( var form in Model.forms ) {
+                formListItems.Add( new SelectListItem { Text = form.formName, Value = form.formId.ToString() } );
+            }
+        }
+        <div class="form-group">
+            @Html.LabelFor( model => model.piece.formId, "Form", htmlAttributes: new {
+                @class = "control-label col-md-2"
+            } )
+            <div class="col-md-10">
+                @Html.DropDownListFor( model => model.piece.formId, new SelectList( formListItems, "Value", "Text" ), htmlAttributes: new {
+                    @class = "form-control"
+                } )
+                @Html.ValidationMessageFor( model => model.piece.formId, "", new {
+                    @class = "text-danger"
+                } )
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
