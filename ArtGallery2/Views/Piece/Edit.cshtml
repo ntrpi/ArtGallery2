@@ -1,0 +1,153 @@
+﻿@model ArtGallery2.Models.ViewModels.UpdatePiece
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>Edit</h2>
+
+@{
+    //The attribute enctype="multipart/form-data" is required
+    //if you are sending files as part of the HTTP POST request
+}
+@using( Html.BeginForm( "Edit", "Piece", new {
+    id = Model.piece.pieceId
+}, FormMethod.Post, new {
+    enctype = "multipart/form-data"
+} ) ) {
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Piece</h4>
+        <hr />
+        @Html.ValidationSummary( true, "", new {
+            @class = "text-danger"
+        } )
+        @Html.HiddenFor( model => model.piece.pieceId, new {
+            Name = "pieceId"
+        } )
+
+        <div class="form-group">
+            @Html.LabelFor( model => model.piece.pieceName, htmlAttributes: new {
+                @class = "control-label col-md-2"
+            } )
+            <div class="col-md-10">
+                @Html.EditorFor( model => model.piece.pieceName, new {
+                    htmlAttributes = new {
+                        @class = "form-control", Name = "pieceName"
+                    }
+                } )
+                @Html.ValidationMessageFor( model => model.piece.pieceName, "", new {
+                    @class = "text-danger"
+                } )
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor( model => model.piece.pieceDescription, htmlAttributes: new {
+                @class = "control-label col-md-2"
+            } )
+            <div class="col-md-10">
+                @Html.EditorFor( model => model.piece.pieceDescription, new {
+                    htmlAttributes = new {
+                        @class = "form-control", Name = "pieceDescription"
+                    }
+                } )
+                @Html.ValidationMessageFor( model => model.piece.pieceDescription, "", new {
+                    @class = "text-danger"
+                } )
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor( model => model.piece.length, htmlAttributes: new {
+                @class = "control-label col-md-2"
+            } )
+            <div class="col-md-10">
+                @Html.EditorFor( model => model.piece.length, new {
+                    htmlAttributes = new {
+                        @class = "form-control", Name = "length"
+                    }
+                } )
+                @Html.ValidationMessageFor( model => model.piece.length, "", new {
+                    @class = "text-danger"
+                } )
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor( model => model.piece.width, htmlAttributes: new {
+                @class = "control-label col-md-2"
+            } )
+            <div class="col-md-10">
+                @Html.EditorFor( model => model.piece.width, new {
+                    htmlAttributes = new {
+                        @class = "form-control", Name = "width"
+                    }
+                } )
+                @Html.ValidationMessageFor( model => model.piece.width, "", new {
+                    @class = "text-danger"
+                } )
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor( model => model.piece.height, htmlAttributes: new {
+                @class = "control-label col-md-2"
+            } )
+            <div class="col-md-10">
+                @Html.EditorFor( model => model.piece.height, new {
+                    htmlAttributes = new {
+                        @class = "form-control", Name = "height"
+                    }
+                } )
+                @Html.ValidationMessageFor( model => model.piece.height, "", new {
+                    @class = "text-danger"
+                } )
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor( model => model.piece.piecePrice, htmlAttributes: new {
+                @class = "control-label col-md-2"
+            } )
+            <div class="col-md-10">
+                @Html.EditorFor( model => model.piece.piecePrice, new {
+                    htmlAttributes = new {
+                        @class = "form-control", Name = "piecePrice"
+                    }
+                } )
+                @Html.ValidationMessageFor( model => model.piece.piecePrice, "", new {
+                    @class = "text-danger"
+                } )
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor( model => model.piece.formId, htmlAttributes: new {
+                @class = "control-label col-md-2"
+            } )
+            <div class="col-md-10">
+                <select name="formId">
+                    @foreach( var form in Model.forms ) {
+                        string selected = "";
+                        if( Model.piece.formId == form.formId ) {
+                            selected = "";
+                        }
+                        <option value="@form.formId" @selected>@form.formName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink( "Back to List", "Index" )
+</div>

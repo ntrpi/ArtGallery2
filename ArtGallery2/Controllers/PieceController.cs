@@ -39,7 +39,7 @@ namespace ArtGallery2.Controllers.Inventory
         // GET: Piece
         public ActionResult Index()
         {
-            return View();
+            return View( List() );
         }
 
         // GET: Piece/list
@@ -55,33 +55,91 @@ namespace ArtGallery2.Controllers.Inventory
             }
         }
 
-        // GET: Piece/details/5
-        public ActionResult Details( int id )
+        private FormDto getFormDto( int id )
+        {
+            string url = "FormData/findForm/" + id;
+            HttpResponseMessage formResponse = client.GetAsync( url ).Result;
+            if( formResponse.IsSuccessStatusCode ) {
+                FormDto formDto = formResponse.Content.ReadAsAsync<FormDto>().Result;
+                return formDto;
+            }
+
+            // If not successful, return null.
+            return null;
+        }
+
+        private IEnumerable<FormDto> getFormDtos()
+        {
+            string url = "FormData/getForms";
+            HttpResponseMessage response = client.GetAsync( url ).Result;
+            if( response.IsSuccessStatusCode ) {
+                IEnumerable<FormDto> forms = response.Content.ReadAsAsync<IEnumerable<FormDto>>().Result;
+                return forms;
+            }
+            return null;
+        }
+
+            private PieceDto getPieceDto( int id )
         {
             string url = "PieceData/findPiece/" + id;
             HttpResponseMessage response = client.GetAsync( url ).Result;
+
             if( response.IsSuccessStatusCode ) {
-                PieceDto form = response.Content.ReadAsAsync<PieceDto>().Result;
-                return View( form );
-            } else {
+                //Put data into player data transfer object
+                PieceDto pieceDto = response.Content.ReadAsAsync<PieceDto>().Result;
+                return pieceDto;
+            }
+            return null;
+        }
+
+        private ShowPiece getShowPiece( int id )
+        {
+            ShowPiece piece = new ShowPiece();
+
+            PieceDto pieceDto = getPieceDto( id );
+
+            // If not successful, return null.
+            if( pieceDto == null ) {
+                return null;
+            }
+
+            piece.piece = pieceDto;
+            piece.form = getFormDto( pieceDto.formId );
+            return piece;
+        }
+
+        private UpdatePiece getUpdatePiece( int id )
+        {
+            UpdatePiece piece = new UpdatePiece();
+            PieceDto pieceDto = getPieceDto( id );
+            // If not successful, return null.
+            if( pieceDto == null ) {
+                return null;
+            }
+
+            piece.piece = pieceDto;
+            piece.forms = getFormDtos();
+            return piece;
+        }
+
+        // GET: Piece/details/5
+        public ActionResult Details( int id )
+        {
+            ShowPiece piece = getShowPiece( id );
+            if( piece == null ) {
                 return RedirectToAction( "Error" );
             }
+            return View( piece );
         }
 
         // GET: Piece/Create
         public ActionResult Create()
         {
             UpdatePiece piece = new UpdatePiece();
+            piece.forms = getFormDtos();
+            return View( piece );
 
-            string url = "FormData/getForms";
-            HttpResponseMessage response = client.GetAsync( url ).Result;
-            if( response.IsSuccessStatusCode ) {
-                IEnumerable<FormDto> forms = response.Content.ReadAsAsync<IEnumerable<FormDto>>().Result;
-                piece.forms = forms;
-                return View( piece );
-            } else {
-                return RedirectToAction( "Error" );
-            }
+            // TODO: deal with null forms.
         }
 
         // POST: Piece/Create
@@ -97,16 +155,22 @@ namespace ArtGallery2.Controllers.Inventory
 
             if( response.IsSuccessStatusCode ) {
 
-                int pieceId = 0;
-                try {
-                    pieceId = response.Content.ReadAsAsync<int>().Result;
-                    return RedirectToAction( "Details", new {
-                        id = pieceId
-                    } );
-                } catch( Exception e ) {
-                    Debug.WriteLine( e );
-                    return RedirectToAction( "List" );
-                }
+                string jsonContent = response.Content.ReadAsStringAsync().Result;
+                PieceDto pieceDto = jss.Deserialize<PieceDto>( jsonContent );
+                return RedirectToAction( "Details", new {
+                    id = pieceDto.pieceId
+                } );
+
+                // The ReadAsAsync kept throwing a System.AggregateException
+                //try {
+                //    pieceId = response.Content.ReadAsAsync<int>().Result;
+                //    return RedirectToAction( "Details", new {
+                //        id = pieceId
+                //    } );
+                //} catch( Exception e ) {
+                //    Debug.WriteLine( e );
+                //    return RedirectToAction( "List" );
+                //}
 
 
             } else {
@@ -117,20 +181,18 @@ namespace ArtGallery2.Controllers.Inventory
         [HttpGet]
         public ActionResult Edit( int id )
         {
-            string url = "PieceData/findPiece/" + id;
-            HttpResponseMessage response = client.GetAsync( url ).Result;
-            if( response.IsSuccessStatusCode ) {
-                //Put data into data transfer object
-                PieceDto formDto = response.Content.ReadAsAsync<PieceDto>().Result;
-                return View( formDto );
-            } else {
+            UpdatePiece piece = new UpdatePiece();
+            piece.piece = getPieceDto( id );
+            if( piece == null ) {
                 return RedirectToAction( "Error" );
             }
+
+            piece.forms = getFormDtos();
+            return View( piece );
         }
 
         // POST: Piece/edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken()]
         public ActionResult Edit( int id, Piece form )
         {
             string url = "PieceData/updatePiece/" + id;
@@ -150,17 +212,11 @@ namespace ArtGallery2.Controllers.Inventory
         [HttpGet]
         public ActionResult DeleteConfirm( int id )
         {
-            string url = "PieceData/findPiece/" + id;
-            HttpResponseMessage response = client.GetAsync( url ).Result;
-            //Can catch the status code (200 OK, 301 REDIRECT), etc.
-            //Debug.WriteLine(response.StatusCode);
-            if( response.IsSuccessStatusCode ) {
-                //Put data into player data transfer object
-                PieceDto formDto = response.Content.ReadAsAsync<PieceDto>().Result;
-                return View( formDto );
-            } else {
+            ShowPiece piece = getShowPiece( id );
+            if( piece == null ) {
                 return RedirectToAction( "Error" );
             }
+            return View( piece );
         }
 
         // POST: Piece/Delete/5
@@ -172,8 +228,6 @@ namespace ArtGallery2.Controllers.Inventory
             HttpContent content = new StringContent( "" );
             HttpResponseMessage response = client.PostAsync( url, content ).Result;
 
-            //Can catch the status code (200 OK, 301 REDIRECT), etc.
-            //Debug.WriteLine(response.StatusCode);
             if( response.IsSuccessStatusCode ) {
                 return RedirectToAction( "List" );
             } else {

@@ -17,10 +17,10 @@ namespace ArtGallery2.Controllers
     {
         private ArtGalleryDbContext db = new ArtGalleryDbContext();
 
-        // GET: api/PiecesData/getPieces
+        // GET: api/PieceData/getPieces
         // Authorize annotation will block requests unless user is authorized
         // authorization process checks for valid cookies in request
-        [Authorize]
+        //[Authorize]
         public IEnumerable<PieceDto> getPieces()
         {
             List<Piece> pieces = db.pieces.ToList();
@@ -108,31 +108,26 @@ namespace ArtGallery2.Controllers
 
         // PUT: api/Pieces/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutPiece(int id, Piece piece)
+        [HttpPost]
+        public IHttpActionResult updatePiece(int id, [FromBody] Piece piece )
         {
-            if (!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
 
-            if (id != piece.pieceId)
-            {
+            if (id != piece.pieceId) {
                 return BadRequest();
             }
 
             db.Entry(piece).State = EntityState.Modified;
 
-            try
-            {
+            try {
                 db.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PieceExists(id))
-                {
+            catch (DbUpdateConcurrencyException) {
+                if( !PieceExists(id) ) {
                     return NotFound();
-                }
-                else
+                } else
                 {
                     throw;
                 }

@@ -1,0 +1,70 @@
+﻿@model ArtGallery2.Models.ViewModels.ShowPiece
+
+<div>
+    <h4>Piece</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor( model => model.piece.pieceName )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor( model => model.piece.pieceName )
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor( model => model.form.formName )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor( model => model.form.formName )
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor( model => model.piece.pieceDescription )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor( model => model.piece.pieceDescription )
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor( model => model.piece.length )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor( model => model.piece.length )
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor( model => model.piece.width )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor( model => model.piece.width )
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor( model => model.piece.height )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor( model => model.piece.height )
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor( model => model.piece.piecePrice )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor( model => model.piece.piecePrice )
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink( "Edit", "Edit", new {
+        id = Model.piece.pieceId
+    } ) |
+    @Html.ActionLink( "Back to List", "List" )
+</p>

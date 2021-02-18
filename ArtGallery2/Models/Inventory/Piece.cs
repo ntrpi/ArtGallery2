@@ -50,31 +50,31 @@ namespace ArtGallery2.Models.Inventory
         }
 
         // A piece has one Media.
-        [ForeignKey( "Media" )]
-        public int mediaId {
-            get; set;
-        }
-        public virtual Media Media {
-            get; set;
-        }
+//        [ForeignKey( "Media" )]
+        //public int mediaId {
+        //    get; set;
+        //}
+        //public virtual Media Media {
+        //    get; set;
+        //}
 
         // A piece has one Status.
-        [ForeignKey( "Status" )]
-        public int statusId {
-            get; set;
-        }
-        public virtual Status Status {
-            get; set;
-        }
+//        [ForeignKey( "Status" )]
+        //public int statusId {
+        //    get; set;
+        //}
+        //public virtual Status Status {
+        //    get; set;
+        //}
 
         // A piece has one Technique.
-        [ForeignKey( "Technique" )]
-        public int techniqueId {
-            get; set;
-        }
-        public virtual Technique Technique {
-            get; set;
-        }
+//        [ForeignKey( "Technique" )]
+        //public int techniqueId {
+        //    get; set;
+        //}
+        //public virtual Technique Technique {
+        //    get; set;
+        //}
 
         ICollection<Image> images {
             get; set;
@@ -123,16 +123,16 @@ namespace ArtGallery2.Models.Inventory
             get; set;
         }
 
-        public int statusId {
-            get; set;
-        }
+        //public int statusId {
+        //    get; set;
+        //}
 
-        public int mediaId {
-            get; set;
-        }
+        //public int mediaId {
+        //    get; set;
+        //}
 
-        public int techniqueId {
-            get; set;
-        }
+        //public int techniqueId {
+        //    get; set;
+        //}
     }
 }
