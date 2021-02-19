@@ -59,10 +59,12 @@
         <dd>
             @Html.DisplayFor( model => model.piece.piecePrice )
         </dd>
-
     </dl>
 </div>
 <p>
+    @Html.ActionLink( "Images", "../Image/Images", new {
+        id = Model.piece.pieceId
+    } ) |
     @Html.ActionLink( "Edit", "Edit", new {
         id = Model.piece.pieceId
     } ) |

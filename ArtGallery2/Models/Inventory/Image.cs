@@ -14,6 +14,14 @@ namespace ArtGallery2.Models.Inventory
             get; set;
         }
 
+        public string imageName {
+            get; set;
+        }
+
+        public string imageExt {
+            get; set;
+        }
+
         public string imagePath {
             get; set;
         }
@@ -34,9 +42,18 @@ namespace ArtGallery2.Models.Inventory
             get; set;
         }
 
+        public string imageName {
+            get; set;
+        }
+
+        public string imageExt {
+            get; set;
+        }
+
         public string imagePath {
             get; set;
         }
+
 
         public int pieceId {
             get; set;

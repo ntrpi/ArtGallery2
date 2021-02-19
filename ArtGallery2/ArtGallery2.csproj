@@ -55,12 +55,18 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.7\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.7\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -184,6 +190,7 @@
     <Compile Include="Controllers\FormController.cs" />
     <Compile Include="Controllers\FormDataController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\ImageDataController.cs" />
     <Compile Include="Controllers\PieceController.cs" />
     <Compile Include="Controllers\StatusDataController.cs" />
@@ -191,6 +198,7 @@
     <Compile Include="Controllers\MediaDataController.cs" />
     <Compile Include="Controllers\PieceDataController.cs" />
     <Compile Include="Controllers\TechniqueDataController.cs" />
+    <Compile Include="Controllers\TextResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -282,6 +290,18 @@
     <Compile Include="Migrations\202102180034084_ArtGallery2_202102171934.Designer.cs">
       <DependentUpon>202102180034084_ArtGallery2_202102171934.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102182010004_ArtGallery2_202102181509.cs" />
+    <Compile Include="Migrations\202102182010004_ArtGallery2_202102181509.Designer.cs">
+      <DependentUpon>202102182010004_ArtGallery2_202102181509.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102182101258_ArtGallery2_202102181601.cs" />
+    <Compile Include="Migrations\202102182101258_ArtGallery2_202102181601.Designer.cs">
+      <DependentUpon>202102182101258_ArtGallery2_202102181601.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102182353029_ArtGallery2_202102181852.cs" />
+    <Compile Include="Migrations\202102182353029_ArtGallery2_202102181852.Designer.cs">
+      <DependentUpon>202102182353029_ArtGallery2_202102181852.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -292,6 +312,8 @@
     <Compile Include="Models\Inventory\Status.cs" />
     <Compile Include="Models\Inventory\Technique.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ViewModels\ShowImage.cs" />
+    <Compile Include="Models\ViewModels\ShowImages.cs" />
     <Compile Include="Models\ViewModels\ShowPiece.cs" />
     <Compile Include="Models\ViewModels\UpdatePiece.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -364,9 +386,13 @@
     <Content Include="Views\Piece\List.cshtml" />
     <Content Include="Views\Piece\Details.cshtml" />
     <Content Include="Views\Piece\Edit.cshtml" />
+    <Content Include="Views\Image\Images.cshtml" />
+    <Content Include="Views\Image\Create.cshtml" />
+    <Content Include="Views\Image\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Images\" />
     <Folder Include="Views\Inventory\" />
   </ItemGroup>
   <ItemGroup>
@@ -448,6 +474,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102180034084_ArtGallery2_202102171934.resx">
       <DependentUpon>202102180034084_ArtGallery2_202102171934.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102182010004_ArtGallery2_202102181509.resx">
+      <DependentUpon>202102182010004_ArtGallery2_202102181509.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102182101258_ArtGallery2_202102181601.resx">
+      <DependentUpon>202102182101258_ArtGallery2_202102181601.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102182353029_ArtGallery2_202102181852.resx">
+      <DependentUpon>202102182353029_ArtGallery2_202102181852.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

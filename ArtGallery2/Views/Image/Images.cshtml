@@ -1,0 +1,42 @@
+﻿@model ArtGallery2.Models.ViewModels.ShowImages
+
+<h3>Images</h3>
+
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor( model => model.piece.pieceName )
+    </dt>
+    <dd>
+        @Html.DisplayFor( model => model.piece.pieceName )
+    </dd>
+</dl>
+
+<div>
+    @if( Model.images.Count() == 0 ) {
+        <p>There are no images for this piece.</p>
+    } else {
+        foreach( var image in Model.images ) {
+            var source = "https://localhost:44338/Content/Images/" + image.imageName + "." + image.imageExt;
+            <div>
+                <div class="imagecontainer featured">
+                    <img src="@source" />
+                    @Html.ActionLink( "Edit", "Edit", new {
+                        id = image.imageId
+                    } ) |
+                    @Html.ActionLink( "Details", "Details", new {
+                        id = image.imageId
+                    } ) |
+                    @Html.ActionLink( "Delete", "DeleteConfirm", new {
+                        id = image.imageId
+                    } )
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<p>
+    @Html.ActionLink( "Add Image", "Create", new {
+        id = Model.piece.pieceId
+    } )
+</p>

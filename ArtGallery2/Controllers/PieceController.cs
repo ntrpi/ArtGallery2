@@ -193,10 +193,10 @@ namespace ArtGallery2.Controllers.Inventory
 
         // POST: Piece/edit/5
         [HttpPost]
-        public ActionResult Edit( int id, Piece form )
+        public ActionResult Edit( int id, Piece piece )
         {
             string url = "PieceData/updatePiece/" + id;
-            HttpContent content = new StringContent( jss.Serialize( form ) );
+            HttpContent content = new StringContent( jss.Serialize( piece ) );
             content.Headers.ContentType = new MediaTypeHeaderValue( "application/json" );
             HttpResponseMessage response = client.PostAsync( url, content ).Result;
             if( response.IsSuccessStatusCode ) {
@@ -207,6 +207,7 @@ namespace ArtGallery2.Controllers.Inventory
                 return RedirectToAction( "Error" );
             }
         }
+
 
         // GET: Piece/Delete/5
         [HttpGet]
