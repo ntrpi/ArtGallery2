@@ -1,0 +1,45 @@
+﻿@model ArtGallery2.Models.ViewModels.ShowImage
+
+<div>
+    <h3>Delete image?</h3>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor( model => model.showImages.piece.pieceName )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor( model => model.showImages.piece.pieceName )
+        </dd>
+        <dt>
+            @Html.DisplayNameFor( model => model.image.imagePath )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor( model => model.image.imagePath )
+        </dd>
+    </dl>
+    <div class="imagecontainer featured">
+        @{
+            var source = "https://localhost:44338/Content/Images/" + Model.image.imageName + "." + Model.image.imageExt;
+        }
+        <img src="@source" />
+    </div>
+
+    @using( Html.BeginForm( "Delete", "Image", new {
+        id = Model.image.imageId
+    } ) ) {
+        @Html.AntiForgeryToken()
+
+        <input style="display: none" type="number" value="@Model.showImages.piece.pieceId" name="pieceId" />
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink( "Back to Images", "Images", new {
+                id = Model.showImages.piece.pieceId
+            } )
+        </div>
+    }
+
+</div>
+
+

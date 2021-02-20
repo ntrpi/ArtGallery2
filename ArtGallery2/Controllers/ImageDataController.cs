@@ -24,16 +24,17 @@ namespace ArtGallery2.Controllers
 
         private JavaScriptSerializer jss = new JavaScriptSerializer();
 
-        // GET: api/ImagesData/getImages
+        // GET: api/ImagesData/getImagesForPiece/{id}
         // Authorize annotation will block requests unless user is authorized
         // authorization process checks for valid cookies in request
         // [Authorize]
-        public IEnumerable<ImageDto> getImages( int id )
+        // id == pieceId
+        public IEnumerable<ImageDto> getImagesForPiece( int id )
         {
             List<Image> images = db.images.Where( i => i.pieceId == id ).ToList();
             List<ImageDto> imageDtos = new List<ImageDto> { };
 
-            //Here you can choose which information is exposed to the API
+            //Here you can choose which inimageation is exposed to the API
             foreach( var image in images ) {
                 ImageDto imageDto = new ImageDto {
                     imageId = image.imageId,
@@ -60,12 +61,13 @@ namespace ArtGallery2.Controllers
                 return NotFound();
             }
 
-            //put into a 'friendly object format'
+            //put into a 'friendly object imageat'
             ImageDto imageDto = new ImageDto {
                 imageId = image.imageId,
                 imageName = image.imageName,
                 imageExt = image.imageExt,
                 imagePath = image.imagePath,
+                isMainImage = image.isMainImage,
                 pieceId = image.pieceId
             };
 
@@ -83,7 +85,7 @@ namespace ArtGallery2.Controllers
             if( !Request.Content.IsMimeMultipartContent() ) {
                 return new TextResult( "Missing image file.", Request );
             }
-            Debug.WriteLine( "Received multipart form data." );
+            Debug.WriteLine( "Received multipart image data." );
 
             //Check if a file is posted
             int numfiles = HttpContext.Current.Request.Files.Count;
@@ -138,6 +140,35 @@ namespace ArtGallery2.Controllers
             // Not using this right now, but leaving it because I plan to.
             return Ok( image.imageId );
         }
+
+        [ResponseType( typeof( void ) )]
+        [HttpPost]
+        public IHttpActionResult updateImage( int id, [FromBody] Image image )
+        {
+            if( !ModelState.IsValid ) {
+                return BadRequest( ModelState );
+            }
+
+            if( id != image.imageId ) {
+                return BadRequest();
+            }
+
+            db.Entry( image ).State = EntityState.Modified;
+
+            try {
+                db.SaveChanges();
+
+            } catch( DbUpdateConcurrencyException ) {
+                if( !ImageExists( id ) ) {
+                    return NotFound();
+                } else {
+                    throw;
+                }
+            }
+
+            return StatusCode( HttpStatusCode.NoContent );
+        }
+
 
         // POST: api/Images/deleteImage/5
         [HttpPost]

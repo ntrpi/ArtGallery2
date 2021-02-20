@@ -22,3 +22,73 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/* Images.cshtml */
+
+.imagesContent h3 {
+    padding: 0 2em;
+}
+
+.featuredImageDivParent {
+    display: flex;
+    flex-direction: row
+}
+
+.featuredImageDiv img {
+    max-width: 500px;
+    margin: 1em 2em;
+}
+
+.imagesDiv {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.imageDiv {
+    display: flex;
+    flex-direction: column;
+    margin: .2em;
+}
+
+.imagesDiv img {
+    max-width: 200px;
+    margin: .5em 1.5em;
+}
+
+.mainImageLabel {
+    margin-top: 1em;
+}
+
+.actionLinksDiv {
+    display: flex;
+    padding: .3em 2em;
+}
+
+.imageActions {
+    justify-content: space-around;
+}
+
+.actionLinksDiv a {
+    padding: .25em;
+}
+
+.buttonAction {
+    border: 1px solid darkGrey;
+    border-radius: 5%;
+    background-color: gainsboro;
+    padding: .5em 1.2em;
+}
+
+.buttonAction a {
+    text-decoration: none;
+    color: black;
+}
+
+.imagesNavActions {
+    padding: 1em;
+    justify-content: space-between;
+}
+
+.imagesNavActions a {
+}

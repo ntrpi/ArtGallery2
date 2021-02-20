@@ -103,6 +103,12 @@ namespace ArtGallery2.Controllers
             db.pieces.Remove( piece );
             db.SaveChanges();
 
+            ImageDataController imageDataController = new ImageDataController();
+            IEnumerable<ImageDto> images = imageDataController.getImagesForPiece( id );
+            foreach( ImageDto image in images ) {
+                imageDataController.deleteImage( image.imageId );
+            }
+
             return Ok();
         }
 

@@ -40,12 +40,22 @@ namespace ArtGallery2.Controllers
             return View();
         }
 
-        private ImageDto getImage( int imageId )
+        private ImageDto getImageDto( int imageId )
         {
             string url = "ImageData/findImage/" + imageId;
             HttpResponseMessage response = client.GetAsync( url ).Result;
             if( response.IsSuccessStatusCode ) {
                 return response.Content.ReadAsAsync<ImageDto>().Result;
+            }
+            return null;
+        }
+
+        private Image getImage( int imageId )
+        {
+            string url = "ImageData/findImage/" + imageId;
+            HttpResponseMessage response = client.GetAsync( url ).Result;
+            if( response.IsSuccessStatusCode ) {
+                return response.Content.ReadAsAsync<Image>().Result;
             }
             return null;
         }
@@ -65,7 +75,7 @@ namespace ArtGallery2.Controllers
 
         private IEnumerable<ImageDto> getPieceImages( int id )
         {
-            string url = "ImageData/getImages/" + id;
+            string url = "ImageData/getImagesForPiece/" + id;
             HttpResponseMessage response = client.GetAsync( url ).Result;
             if( response.IsSuccessStatusCode ) {
                 IEnumerable<ImageDto> images = response.Content.ReadAsAsync<IEnumerable<ImageDto>>().Result;
@@ -89,6 +99,28 @@ namespace ArtGallery2.Controllers
             return showImages;
         }
 
+        private ShowImage getShowImage( int id )
+        {
+            ShowImage showImage = new ShowImage();
+            showImage.image = getImageDto( id );
+            if( showImage.image == null ) {
+                return null;
+            }
+
+            showImage.showImages = new ShowImages();
+            showImage.showImages.piece = getPieceDto( showImage.image.pieceId );
+            if( showImage.showImages.piece == null ) {
+                return null;
+            }
+
+            showImage.showImages.images = getPieceImages( showImage.showImages.piece.pieceId );
+            if( showImage.showImages.images == null ) {
+                return null;
+            }
+
+            return showImage;
+        }
+
         // Get: Image/Images/5
         [HttpGet]
         public ActionResult Images( int id )
@@ -105,7 +137,11 @@ namespace ArtGallery2.Controllers
         // GET: Image/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            ShowImage showImage = getShowImage( id );
+            if( showImage == null ) {
+                return RedirectToAction( "Error" );
+            }
+            return View( showImage );
         }
 
         // GET: Image/Create
@@ -131,15 +167,6 @@ namespace ArtGallery2.Controllers
 
             if( response.IsSuccessStatusCode ) {
 
-                //ShowImage showImage = new ShowImage();
-                //showImage.showImages = getShowImages( id );
-                //if( showImage.showImages == null ) {
-                //    return RedirectToAction( "Error" );
-                //}
-
-                //int imageId = response.Content.ReadAsAsync<int>().Result;
-                //showImage.image = getImage( imageId );
-
                 return RedirectToAction( "Images", new {
                     id = id
                 } );
@@ -150,27 +177,62 @@ namespace ArtGallery2.Controllers
             }
         }
 
-        // GET: Image/Edit/5
-        public ActionResult Edit(int id)
+        //// GET: Image/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: Image/Edit/5
+        //[HttpPost]
+        //public ActionResult Edit(int id, FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add update logic here
+
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        private bool updateImage( Image image )
         {
-            return View();
+            string url = "ImageData/updateImage/" + image.imageId;
+            HttpContent content = new StringContent( jss.Serialize( image ) );
+            content.Headers.ContentType = new MediaTypeHeaderValue( "application/json" );
+            HttpResponseMessage response = client.PostAsync( url, content ).Result;
+            return response.IsSuccessStatusCode;
         }
 
         // POST: Image/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken()]
+        public ActionResult SetMainImage(int id, FormCollection collection)
         {
-            try
-            {
-                // TODO: Add update logic here
+            Image image = getImage( id );
+            image.isMainImage = true;
+            if( !updateImage( image ) ) {
+                return RedirectToAction( "Error" );
+            }
 
-                return RedirectToAction("Index");
+            int mainImageId = Int32.Parse( collection[ "mainImageId" ] );
+            if( mainImageId != 0 ) {
+                image = getImage( mainImageId );
+                image.isMainImage = false;
+                if( !updateImage( image ) ) {
+                    return RedirectToAction( "Error" );
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return RedirectToAction( "Details", new {
+                id = id
+            } );
         }
+
 
         // GET: Image/Delete/5
         public ActionResult Delete(int id)
@@ -178,19 +240,30 @@ namespace ArtGallery2.Controllers
             return View();
         }
 
+        // GET: Image/Delete/5
+        [HttpGet]
+        public ActionResult DeleteConfirm( int id )
+        {
+            ShowImage showImage = getShowImage( id );
+            if( showImage == null ) {
+                return RedirectToAction( "Error" );
+            }
+            return View( showImage );
+        }
+
         // POST: Image/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete( int id, FormCollection collection )
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
+            string url = "ImageData/deleteImage/" + id;
+            HttpContent content = new StringContent( "" );
+            HttpResponseMessage response = client.PostAsync( url, content ).Result;
+            if( response.IsSuccessStatusCode ) {
+                return RedirectToAction( "Images", new {
+                    id = collection[ "pieceId" ]
+                } );
+            } else {
+                return RedirectToAction( "Error" );
             }
         }
     }

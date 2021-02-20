@@ -1,16 +1,9 @@
 ﻿@model ArtGallery2.Models.ViewModels.ShowImage
 
 <div>
-    <h3>Image Added</h3>
+    <h3>@Model.showImages.piece.pieceName</h3>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor( model => model.showImages.piece.pieceName )
-        </dt>
-
-        <dd>
-            @Html.DisplayFor( model => model.showImages.piece.pieceName )
-        </dd>
         <dt>
             @Html.DisplayNameFor( model => model.image.imagePath )
         </dt>
@@ -19,27 +12,49 @@
             @Html.DisplayFor( model => model.image.imagePath )
         </dd>
     </dl>
-    <div class="imagecontainer featured">
-        <img src="@Model.image.imagePath" />
-    </div>
-    <div>
-        @foreach( var image in Model.showImages.images ) {
-            <div class="imagecontainer">
-                <img src="@image.imagePath" />
-                @Html.ActionLink( "Show Image", "Details", new {
-                    id = image.imageId
-                } )
-            </div>
-        }
-    </div>
+    <div class="featuredImageDivParent">
+        <div class="featuredImageDiv">
+            @{
+                var source = "https://localhost:44338/Content/Images/" + Model.image.imageName + "." + Model.image.imageExt;
+            }
+            <img src="@source" />
+        </div>
+        <div class="mainImageLabel">
+            @{
+                var mainImageId = 0;
+            }
+            @foreach( var image in @Model.showImages.images ) {
+                if( image.isMainImage ) {
+                    mainImageId = image.imageId;
+                    break;
+                }
+            }
+            @if( Model.image.isMainImage ) {
+                <h4>Main Image</h4>
+            } else {
+                using( Html.BeginForm( "SetMainImage", "Image", new {
+                    id = Model.image.imageId
+                } ) ) {
+                    @Html.AntiForgeryToken()
 
+                    <input style="display: none" type="number" value="@Model.showImages.piece.pieceId" name="pieceId" />
+                    <input style="display: none" type="number" value="@mainImageId" name="mainImageId" />
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Set as Main Image" class="btn btn-default" />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="actionLinksDiv">
+        <div>
+            @Html.ActionLink( "Back to Images", "Images", new {
+                id = Model.showImages.piece.pieceId
+            } ) |
+            @Html.ActionLink( "Back to Piece", "../Piece/Details", new {
+                id = Model.showImages.piece.pieceId
+            } )
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink( "Back to Images", "Images", new {
-        id = Model.showImages.piece.pieceId
-    } ) |
-    @Html.ActionLink( "Back to Piece", "Images", new {
-        id = Model.showImages.piece.pieceId
-    } )
-</p>
 

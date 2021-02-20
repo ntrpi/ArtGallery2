@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -23,6 +24,10 @@ namespace ArtGallery2.Models.Inventory
         }
 
         public string imagePath {
+            get; set;
+        }
+
+        public bool isMainImage {
             get; set;
         }
 
@@ -50,10 +55,14 @@ namespace ArtGallery2.Models.Inventory
             get; set;
         }
 
+        [DisplayName( "File" )]
         public string imagePath {
             get; set;
         }
 
+        public bool isMainImage {
+            get; set;
+        }
 
         public int pieceId {
             get; set;
