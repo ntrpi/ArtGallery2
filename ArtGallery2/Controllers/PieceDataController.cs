@@ -17,6 +17,48 @@ namespace ArtGallery2.Controllers
     {
         private ArtGalleryDbContext db = new ArtGalleryDbContext();
 
+        // GET: api/TechniqueData/getTechniquesForPiece/{id}
+        // Authorize annotation will block requests unless user is authorized
+        // authorization process checks for valid cookies in request
+        // [Authorize]
+        // id == techniqueId
+        public IEnumerable<PieceDto> getPiecesForTechnique( int id )
+        {
+            List<PieceTechnique> pieceTechniques = db.pieceTechniques.Where( i => i.techniqueId == id ).ToList();
+            List<PieceDto> pieces = new List<PieceDto> { };
+
+            //Here you can choose which inimageation is exposed to the API
+            foreach( var pieceTechnique in pieceTechniques ) {
+                pieces.Add( getPieceDto( pieceTechnique.pieceId ) );
+            }
+
+            return pieces;
+        }
+
+        // GET: api/TechniqueData/getTechniquesForPiece/{id}
+        // Authorize annotation will block requests unless user is authorized
+        // authorization process checks for valid cookies in request
+        // [Authorize]
+        // id == techniqueId
+        public IEnumerable<PieceDto> getPiecesForForm( int id )
+        {
+            List<Piece> pieces = db.pieces.Where( i => i.formId == id ).ToList();
+            return getPieceDtos( pieces );
+        }
+
+        private IEnumerable<PieceDto> getPieceDtos( IEnumerable<Piece> pieces )
+        {
+            List<PieceDto> pieceDtos = new List<PieceDto> { };
+
+            //Here you can choose which information is exposed to the API
+            foreach( var piece in pieces ) {
+                pieceDtos.Add( getPieceDto( piece ) );
+            }
+            return pieceDtos;
+        }
+
+
+
         // GET: api/PieceData/getPieces
         // Authorize annotation will block requests unless user is authorized
         // authorization process checks for valid cookies in request
@@ -24,38 +66,11 @@ namespace ArtGallery2.Controllers
         public IEnumerable<PieceDto> getPieces()
         {
             List<Piece> pieces = db.pieces.ToList();
-            List<PieceDto> pieceDtos = new List<PieceDto> { };
-
-            //Here you can choose which information is exposed to the API
-            foreach( var piece in pieces ) {
-                PieceDto pieceDto = new PieceDto {
-                    pieceId = piece.pieceId,
-                    pieceName = piece.pieceName,
-                    pieceDescription = piece.pieceDescription,
-                    height = piece.height,
-                    length = piece.length,
-                    width = piece.width,
-                    piecePrice = piece.piecePrice,
-                    formId = piece.formId
-                };
-                pieceDtos.Add( pieceDto );
-            }
-
-            return pieceDtos;
+            return getPieceDtos( pieces );
         }
 
-        // GET: api/PieceData/findPiece/5
-        [ResponseType( typeof( PieceDto ) )]
-        [HttpGet]
-        public IHttpActionResult findPiece( int id )
+        private PieceDto getPieceDto( Piece piece )
         {
-            //Find the data
-            Piece piece = db.pieces.Find( id );
-            //if not found, return 404 status code.
-            if( piece == null ) {
-                return NotFound();
-            }
-
             //put into a 'friendly object format'
             PieceDto pieceDto = new PieceDto {
                 pieceId = piece.pieceId,
@@ -67,9 +82,34 @@ namespace ArtGallery2.Controllers
                 piecePrice = piece.piecePrice,
                 formId = piece.formId
             };
+            return pieceDto;
+        }
+
+        private PieceDto getPieceDto( int id )
+        {
+            //Find the data
+            Piece piece = db.pieces.Find( id );
+            //if not found, return 404 status code.
+            if( piece == null ) {
+                return null;
+            }
+            return getPieceDto( piece );
+        }
+
+        // GET: api/PieceData/findPiece/5
+        [ResponseType( typeof( PieceDto ) )]
+        [HttpGet]
+        public IHttpActionResult findPiece( int id )
+        {
+            //Find the data
+            PieceDto piece = getPieceDto( id );
+            //if not found, return 404 status code.
+            if( piece == null ) {
+                return NotFound();
+            }
 
             //pass along data as 200 status code OK response
-            return Ok( pieceDto );
+            return Ok( piece );
         }
 
         // POST: api/Pieces/addPiece

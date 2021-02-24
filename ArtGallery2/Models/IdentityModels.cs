@@ -54,5 +54,9 @@ namespace ArtGallery2.Models
         public DbSet<Status> statuses {
             get; set;
         }
+
+        public DbSet<PieceTechnique> pieceTechniques {
+            get; set;
+        }
     }
 }

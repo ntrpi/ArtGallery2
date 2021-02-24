@@ -73,7 +73,6 @@ namespace ArtGallery2.Controllers
             return Ok( formDto );
         }
 
-
         // POST: api/Forms/addForm
         // FORM DATA: Form JSON Object
         [ResponseType( typeof( Form ) )]

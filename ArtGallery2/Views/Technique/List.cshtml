@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ArtGallery2.Models.Inventory.TechniqueDto>
+
+<p>
+    @Html.ActionLink( "Create New", "Create" )
+</p>
+
+@if( Model.Count() == 0 ) {
+    <p>There are no techniques in the database.</p>
+} else {
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor( model => model.techniqueName )
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach( var item in Model ) {
+            <tr>
+                <td>
+                    @Html.DisplayFor( modelItem => item.techniqueName )
+                </td>
+                <td>
+                    @Html.ActionLink( "Edit", "Edit", new {
+                        id = item.techniqueId
+                    } ) |
+                    @Html.ActionLink( "Details", "Details", new {
+                        id = item.techniqueId
+                    } ) |
+                    @Html.ActionLink( "Delete", "DeleteConfirm", new {
+                        id = item.techniqueId
+                    } )
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+

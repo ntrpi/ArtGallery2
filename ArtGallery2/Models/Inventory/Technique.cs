@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace ArtGallery2.Models.Inventory
 {
@@ -13,6 +14,7 @@ namespace ArtGallery2.Models.Inventory
             get; set;
         }
 
+        [DisplayName("Technique")]
         public string techniqueName {
             get; set;
         }
@@ -24,6 +26,7 @@ namespace ArtGallery2.Models.Inventory
             get; set;
         }
 
+        [DisplayName( "Technique" )]
         public string techniqueName {
             get; set;
         }

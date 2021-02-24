@@ -17,10 +17,63 @@ namespace ArtGallery2.Controllers
     {
         private ArtGalleryDbContext db = new ArtGalleryDbContext();
 
+        private PieceTechniqueDto getPieceTechniqueDto( PieceTechnique pieceTechnique )
+        {
+            PieceTechniqueDto pieceTechniqueDto = new PieceTechniqueDto {
+                pieceTechniqueId = pieceTechnique.pieceTechniqueId,
+                pieceId = pieceTechnique.pieceId,
+                techniqueId = pieceTechnique.techniqueId
+            };
+
+            return pieceTechniqueDto;
+        }
+
+        public IEnumerable<PieceTechniqueDto> getPieceTechiqueDtosForPiece( int id )
+        {
+            List<PieceTechnique> techniques = db.pieceTechniques.Where( i => i.pieceId == id ).ToList();
+            List<PieceTechniqueDto> pieceTechniques = new List<PieceTechniqueDto>();
+            foreach( PieceTechnique pieceTechnique in techniques ) {
+                pieceTechniques.Add( getPieceTechniqueDto( pieceTechnique ) );
+            }
+            return pieceTechniques;
+        }
+
+        // GET: api/TechniqueData/getTechniquesForPiece/{id}
+        // Authorize annotation will block requests unless user is authorized
+        // authorization process checks for valid cookies in request
+        // [Authorize]
+        // id == pieceId
+        public IEnumerable<TechniqueDto> getTechniquesForPiece( int id )
+        {
+            List<PieceTechnique> techniques = db.pieceTechniques.Where( i => i.pieceId == id ).ToList();
+            List<TechniqueDto> techniqueDtos = new List<TechniqueDto> { };
+
+            //Here you can choose which inimageation is exposed to the API
+            foreach( var technique in techniques ) {
+                techniqueDtos.Add( getTechniqueDto( technique.techniqueId ) );
+            }
+
+            return techniqueDtos;
+        }
+
+        // id == pieceId
+        public IEnumerable<TechniqueDto> getTechniquesNotForPiece( int id )
+        {
+            List<PieceTechnique> techniques = db.pieceTechniques.Where( i => i.pieceId != id ).ToList();
+            List<TechniqueDto> techniqueDtos = new List<TechniqueDto> { };
+
+            //Here you can choose which inimageation is exposed to the API
+            foreach( var technique in techniques ) {
+                techniqueDtos.Add( getTechniqueDto( technique.techniqueId ) );
+            }
+
+            return techniqueDtos;
+        }
+
         // GET: api/TechniquesData/getTechniques
         // Authorize annotation will block requests unless user is authorized
         // authorization process checks for valid cookies in request
-        [Authorize]
+        //[Authorize]
         public IEnumerable<TechniqueDto> getTechniques()
         {
             List<Technique> techniques = db.techniques.ToList();
@@ -38,26 +91,35 @@ namespace ArtGallery2.Controllers
             return techniqueDtos;
         }
 
-        // GET: api/TechniqueData/findTechnique/5
-        [ResponseType( typeof( TechniqueDto ) )]
-        [HttpGet]
-        public IHttpActionResult findTechnique( int id )
+        private TechniqueDto getTechniqueDto( int id )
         {
-            //Find the data
             Technique technique = db.techniques.Find( id );
-            //if not found, return 404 status code.
             if( technique == null ) {
-                return NotFound();
+                return null;
             }
-
             //put into a 'friendly object format'
             TechniqueDto techniqueDto = new TechniqueDto {
                 techniqueId = technique.techniqueId,
                 techniqueName = technique.techniqueName
             };
 
+            return techniqueDto;
+        }
+
+        // GET: api/TechniqueData/findTechnique/5
+        [ResponseType( typeof( TechniqueDto ) )]
+        [HttpGet]
+        public IHttpActionResult findTechnique( int id )
+        {
+            //Find the data
+            TechniqueDto technique = getTechniqueDto( id );
+            //if not found, return 404 status code.
+            if( technique == null ) {
+                return NotFound();
+            }
+
             //pass along data as 200 status code OK response
-            return Ok( techniqueDto );
+            return Ok( technique );
         }
 
         // POST: api/Techniques/addTechnique
@@ -79,25 +141,9 @@ namespace ArtGallery2.Controllers
             }, technique );
         }
 
-        // POST: api/Techniques/deleteTechnique/5
-        [HttpPost]
-        public IHttpActionResult deleteTechnique( int id )
-        {
-            Technique technique = db.techniques.Find( id );
-            if( technique == null ) {
-                return NotFound();
-            }
-
-            db.techniques.Remove( technique );
-            db.SaveChanges();
-
-            return Ok();
-        }
-
-
-        // PUT: api/TechniquesData/5
         [ResponseType( typeof( void ) )]
-        public IHttpActionResult PutTechnique( int id, Technique technique )
+        [HttpPost]
+        public IHttpActionResult updateTechnique( int id, [FromBody] Technique technique )
         {
             if( !ModelState.IsValid ) {
                 return BadRequest( ModelState );
@@ -111,6 +157,7 @@ namespace ArtGallery2.Controllers
 
             try {
                 db.SaveChanges();
+
             } catch( DbUpdateConcurrencyException ) {
                 if( !TechniqueExists( id ) ) {
                     return NotFound();
@@ -120,6 +167,22 @@ namespace ArtGallery2.Controllers
             }
 
             return StatusCode( HttpStatusCode.NoContent );
+        }
+
+
+        // POST: api/Techniques/deleteTechnique/5
+        [HttpPost]
+        public IHttpActionResult deleteTechnique( int id )
+        {
+            Technique technique = db.techniques.Find( id );
+            if( technique == null ) {
+                return NotFound();
+            }
+
+            db.techniques.Remove( technique );
+            db.SaveChanges();
+
+            return Ok();
         }
 
         protected override void Dispose( bool disposing )

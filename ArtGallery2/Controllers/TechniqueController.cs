@@ -9,17 +9,14 @@ using System.Diagnostics;
 using System.Web.Script.Serialization;
 using ArtGallery2.Models.Inventory;
 
-namespace ArtGallery2.Controllers.Inventory
+namespace ArtGallery2.Controllers
 {
-    public class FormController : Controller
+    public class TechniqueController : Controller
     {
-        //Http Client is the proper way to connect to a webapi
-        //https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-5.0
-
         private JavaScriptSerializer jss = new JavaScriptSerializer();
         private static readonly HttpClient client;
 
-        static FormController()
+        static TechniqueController()
         {
             HttpClientHandler handler = new HttpClientHandler() {
                 AllowAutoRedirect = false
@@ -28,69 +25,71 @@ namespace ArtGallery2.Controllers.Inventory
 
             // Change this to match your own local port number.
             client.BaseAddress = new Uri( "https://localhost:44338/api/" );
-            
+
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue( "application/json" ) );
 
             //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ACCESS_TOKEN);
         }
 
-        // GET: Form
+        // GET: Technique
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction( "List" );
         }
 
-        // GET: Form/list
+        // GET: Technique/list
         public ActionResult List()
         {
-            string url = "FormData/getForms";
+            string url = "TechniqueData/getTechniques";
             HttpResponseMessage response = client.GetAsync( url ).Result;
             if( response.IsSuccessStatusCode ) {
-                IEnumerable<FormDto> forms = response.Content.ReadAsAsync<IEnumerable<FormDto>>().Result;
-                return View( forms );
+                IEnumerable<TechniqueDto> techniques = response.Content.ReadAsAsync<IEnumerable<TechniqueDto>>().Result;
+                return View( techniques );
             } else {
                 return RedirectToAction( "Error" );
             }
         }
 
-        // GET: Form/details/5
-        public ActionResult Details(int id)
+
+
+        // GET: Technique/Details/5
+        public ActionResult Details( int id )
         {
-            string url = "FormData/findForm/" + id;
+            string url = "TechniqueData/findTechnique/" + id;
             HttpResponseMessage response = client.GetAsync( url ).Result;
             if( response.IsSuccessStatusCode ) {
-                FormDto form = response.Content.ReadAsAsync<FormDto>().Result;
-                return View( form );
+                TechniqueDto technique = response.Content.ReadAsAsync<TechniqueDto>().Result;
+                return View( technique );
             } else {
                 return RedirectToAction( "Error" );
             }
         }
 
-        // GET: Form/Create
+        // GET: Technique/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Form/Create
+        // POST: Technique/Create
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public ActionResult Create( Form form )
+        public ActionResult Create( Technique technique )
         {
-            string url = "FormData/addForm";
-            Debug.WriteLine( jss.Serialize( form ) );
-            HttpContent content = new StringContent( jss.Serialize( form ) );
+            string url = "TechniqueData/addTechnique";
+            Debug.WriteLine( jss.Serialize( technique ) );
+            HttpContent content = new StringContent( jss.Serialize( technique ) );
             content.Headers.ContentType = new MediaTypeHeaderValue( "application/json" );
             HttpResponseMessage response = client.PostAsync( url, content ).Result;
 
             if( response.IsSuccessStatusCode ) {
 
-                int formId = 0;
+                int techniqueId = 0;
                 try {
-                    formId = response.Content.ReadAsAsync<int>().Result;
+                    techniqueId = response.Content.ReadAsAsync<int>().Result;
                     return RedirectToAction( "Details", new {
-                        id = formId
+                        id = techniqueId
                     } );
                 } catch( Exception e ) {
                     Debug.WriteLine( e );
@@ -103,27 +102,28 @@ namespace ArtGallery2.Controllers.Inventory
             }
         }
 
+
         [HttpGet]
         public ActionResult Edit( int id )
         {
-            string url = "FormData/findForm/" + id;
+            string url = "TechniqueData/findTechnique/" + id;
             HttpResponseMessage response = client.GetAsync( url ).Result;
             if( response.IsSuccessStatusCode ) {
                 //Put data into data transfer object
-                FormDto formDto = response.Content.ReadAsAsync<FormDto>().Result;
-                return View( formDto );
+                TechniqueDto techniqueDto = response.Content.ReadAsAsync<TechniqueDto>().Result;
+                return View( techniqueDto );
             } else {
                 return RedirectToAction( "Error" );
             }
         }
 
-        // POST: Form/edit/5
+        // POST: Technique/edit/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public ActionResult Edit( int id, Form form )
+        public ActionResult Edit( int id, Technique technique )
         {
-            string url = "FormData/updateForm/" + id;
-            HttpContent content = new StringContent( jss.Serialize( form ) );
+            string url = "TechniqueData/updateTechnique/" + id;
+            HttpContent content = new StringContent( jss.Serialize( technique ) );
             content.Headers.ContentType = new MediaTypeHeaderValue( "application/json" );
             HttpResponseMessage response = client.PostAsync( url, content ).Result;
             if( response.IsSuccessStatusCode ) {
@@ -135,28 +135,29 @@ namespace ArtGallery2.Controllers.Inventory
             }
         }
 
-        // GET: Form/Delete/5
+        // GET: Technique/Delete/5
         [HttpGet]
         public ActionResult DeleteConfirm( int id )
         {
-            string url = "FormData/findForm/" + id;
+            string url = "TechniqueData/findTechnique/" + id;
             HttpResponseMessage response = client.GetAsync( url ).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
             //Debug.WriteLine(response.StatusCode);
             if( response.IsSuccessStatusCode ) {
                 //Put data into player data transfer object
-                FormDto formDto = response.Content.ReadAsAsync<FormDto>().Result;
-                return View( formDto );
+                TechniqueDto techniqueDto = response.Content.ReadAsAsync<TechniqueDto>().Result;
+                return View( techniqueDto );
             } else {
                 return RedirectToAction( "Error" );
             }
         }
 
-        // POST: Form/Delete/5
+
+        // POST: Technique/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete( int id, FormCollection collection )
         {
-            string url = "FormData/deleteForm/" + id;
+            string url = "TechniqueData/deleteTechnique/" + id;
 
             HttpContent content = new StringContent( "" );
             HttpResponseMessage response = client.PostAsync( url, content ).Result;
@@ -168,11 +169,6 @@ namespace ArtGallery2.Controllers.Inventory
             } else {
                 return RedirectToAction( "Error" );
             }
-        }
-
-        public ActionResult Error()
-        {
-            return View();
         }
     }
 }

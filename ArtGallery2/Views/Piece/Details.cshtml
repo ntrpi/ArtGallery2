@@ -59,6 +59,19 @@
         <dd>
             @Html.DisplayFor( model => model.piece.piecePrice )
         </dd>
+        <dt>
+            @Html.DisplayText( "Techniques" )
+        </dt>
+
+        <dd>
+            @{
+                var techniques = "";
+                foreach( var technique in Model.techniques ) {
+                    techniques += technique + "\n";
+                }
+            }
+            @Html.Display( techniques )
+        </dd>
     </dl>
 </div>
 <p>

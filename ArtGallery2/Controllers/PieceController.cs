@@ -42,14 +42,27 @@ namespace ArtGallery2.Controllers.Inventory
             return View( List() );
         }
 
+        // GET: Piece/list/{form id}
+        public ActionResult List( int id )
+        {
+            string url = "PieceData/getPiecesForForm/" + id;
+            HttpResponseMessage response = client.GetAsync( url ).Result;
+            if( response.IsSuccessStatusCode ) {
+                IEnumerable<PieceDto> pieces = response.Content.ReadAsAsync<IEnumerable<PieceDto>>().Result;
+                return View( pieces );
+            } else {
+                return RedirectToAction( "Error" );
+            }
+        }
+
         // GET: Piece/list
         public ActionResult List()
         {
             string url = "PieceData/getPieces";
             HttpResponseMessage response = client.GetAsync( url ).Result;
             if( response.IsSuccessStatusCode ) {
-                IEnumerable<PieceDto> forms = response.Content.ReadAsAsync<IEnumerable<PieceDto>>().Result;
-                return View( forms );
+                IEnumerable<PieceDto> pieces = response.Content.ReadAsAsync<IEnumerable<PieceDto>>().Result;
+                return View( pieces );
             } else {
                 return RedirectToAction( "Error" );
             }
@@ -79,7 +92,40 @@ namespace ArtGallery2.Controllers.Inventory
             return null;
         }
 
-            private PieceDto getPieceDto( int id )
+        private IEnumerable<TechniqueDto> getTechniqueDtos()
+        {
+            string url = "TechniqueData/getTechniques";
+            HttpResponseMessage response = client.GetAsync( url ).Result;
+            if( response.IsSuccessStatusCode ) {
+                IEnumerable<TechniqueDto> techniqueDtos = response.Content.ReadAsAsync<IEnumerable<TechniqueDto>>().Result;
+                return techniqueDtos;
+            }
+            return null;
+        }
+
+        private IEnumerable<TechniqueDto> getTechniqueDtos( int pieceId )
+        {
+            string url = "TechniqueData/getTechniquesForPiece/" + pieceId;
+            HttpResponseMessage response = client.GetAsync( url ).Result;
+            if( response.IsSuccessStatusCode ) {
+                IEnumerable<TechniqueDto> techniqueDtos = response.Content.ReadAsAsync<IEnumerable<TechniqueDto>>().Result;
+                return techniqueDtos;
+            }
+            return null;
+        }
+
+        private IEnumerable<TechniqueDto> getNotTechniqueDtos( int pieceId )
+        {
+            string url = "TechniqueData/getTechniquesNotForPiece/" + pieceId;
+            HttpResponseMessage response = client.GetAsync( url ).Result;
+            if( response.IsSuccessStatusCode ) {
+                IEnumerable<TechniqueDto> techniqueDtos = response.Content.ReadAsAsync<IEnumerable<TechniqueDto>>().Result;
+                return techniqueDtos;
+            }
+            return null;
+        }
+
+        private PieceDto getPieceDto( int id )
         {
             string url = "PieceData/findPiece/" + id;
             HttpResponseMessage response = client.GetAsync( url ).Result;
@@ -89,6 +135,7 @@ namespace ArtGallery2.Controllers.Inventory
                 PieceDto pieceDto = response.Content.ReadAsAsync<PieceDto>().Result;
                 return pieceDto;
             }
+
             return null;
         }
 
@@ -105,8 +152,13 @@ namespace ArtGallery2.Controllers.Inventory
 
             piece.piece = pieceDto;
             piece.form = getFormDto( pieceDto.formId );
+
+            // Get only the techniques for this piece.
+            piece.techniques = getTechniqueDtos( id );
             return piece;
         }
+
+
 
         private UpdatePiece getUpdatePiece( int id )
         {
@@ -118,7 +170,13 @@ namespace ArtGallery2.Controllers.Inventory
             }
 
             piece.piece = pieceDto;
+
+            // Get a list of all the forms.
             piece.forms = getFormDtos();
+
+            // Get a list of the techniques used in this piece.
+            piece.techniques = getTechniqueDtos( id );
+            piece.notTechniques = getNotTechniqueDtos( id );
             return piece;
         }
 
@@ -154,24 +212,11 @@ namespace ArtGallery2.Controllers.Inventory
             HttpResponseMessage response = client.PostAsync( url, content ).Result;
 
             if( response.IsSuccessStatusCode ) {
-
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
                 PieceDto pieceDto = jss.Deserialize<PieceDto>( jsonContent );
                 return RedirectToAction( "Details", new {
                     id = pieceDto.pieceId
                 } );
-
-                // The ReadAsAsync kept throwing a System.AggregateException
-                //try {
-                //    pieceId = response.Content.ReadAsAsync<int>().Result;
-                //    return RedirectToAction( "Details", new {
-                //        id = pieceId
-                //    } );
-                //} catch( Exception e ) {
-                //    Debug.WriteLine( e );
-                //    return RedirectToAction( "List" );
-                //}
-
 
             } else {
                 return RedirectToAction( "Error" );

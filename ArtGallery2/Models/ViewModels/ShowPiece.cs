@@ -14,5 +14,7 @@ namespace ArtGallery2.Models.ViewModels
         public FormDto form {
             get; set;
         }
+
+        public IEnumerable<TechniqueDto> techniques;
     }
 }

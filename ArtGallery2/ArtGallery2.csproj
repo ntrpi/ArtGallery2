@@ -197,6 +197,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MediaDataController.cs" />
     <Compile Include="Controllers\PieceDataController.cs" />
+    <Compile Include="Controllers\TechniqueController.cs" />
     <Compile Include="Controllers\TechniqueDataController.cs" />
     <Compile Include="Controllers\TextResult.cs" />
     <Compile Include="Global.asax.cs">
@@ -310,6 +311,26 @@
     <Compile Include="Migrations\202102192335031_ArtGallery2_202102191834.Designer.cs">
       <DependentUpon>202102192335031_ArtGallery2_202102191834.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102232220286_ArtGallery_202102231720.cs" />
+    <Compile Include="Migrations\202102232220286_ArtGallery_202102231720.Designer.cs">
+      <DependentUpon>202102232220286_ArtGallery_202102231720.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102232236096_ArtGallery_202102231736.cs" />
+    <Compile Include="Migrations\202102232236096_ArtGallery_202102231736.Designer.cs">
+      <DependentUpon>202102232236096_ArtGallery_202102231736.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102232238353_ArtGallery_202102231738.cs" />
+    <Compile Include="Migrations\202102232238353_ArtGallery_202102231738.Designer.cs">
+      <DependentUpon>202102232238353_ArtGallery_202102231738.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102232347220_ArtGallery_202102231845.cs" />
+    <Compile Include="Migrations\202102232347220_ArtGallery_202102231845.Designer.cs">
+      <DependentUpon>202102232347220_ArtGallery_202102231845.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102240033252_ArtGallery_202102231933.cs" />
+    <Compile Include="Migrations\202102240033252_ArtGallery_202102231933.Designer.cs">
+      <DependentUpon>202102240033252_ArtGallery_202102231933.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -317,6 +338,7 @@
     <Compile Include="Models\Inventory\Image.cs" />
     <Compile Include="Models\Inventory\Media.cs" />
     <Compile Include="Models\Inventory\Piece.cs" />
+    <Compile Include="Models\Inventory\PieceTechnique.cs" />
     <Compile Include="Models\Inventory\Status.cs" />
     <Compile Include="Models\Inventory\Technique.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -398,10 +420,16 @@
     <Content Include="Views\Image\Create.cshtml" />
     <Content Include="Views\Image\Details.cshtml" />
     <Content Include="Views\Image\DeleteConfirm.cshtml" />
+    <Content Include="Views\Technique\List.cshtml" />
+    <Content Include="Views\Technique\Details.cshtml" />
+    <Content Include="Views\Technique\Create.cshtml" />
+    <Content Include="Views\Technique\Edit.cshtml" />
+    <Content Include="Views\Technique\DeleteConfirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Images\" />
+    <Folder Include="Views\Default\" />
     <Folder Include="Views\Inventory\" />
   </ItemGroup>
   <ItemGroup>
@@ -498,6 +526,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102192335031_ArtGallery2_202102191834.resx">
       <DependentUpon>202102192335031_ArtGallery2_202102191834.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102232220286_ArtGallery_202102231720.resx">
+      <DependentUpon>202102232220286_ArtGallery_202102231720.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102232236096_ArtGallery_202102231736.resx">
+      <DependentUpon>202102232236096_ArtGallery_202102231736.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102232238353_ArtGallery_202102231738.resx">
+      <DependentUpon>202102232238353_ArtGallery_202102231738.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102232347220_ArtGallery_202102231845.resx">
+      <DependentUpon>202102232347220_ArtGallery_202102231845.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102240033252_ArtGallery_202102231933.resx">
+      <DependentUpon>202102240033252_ArtGallery_202102231933.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

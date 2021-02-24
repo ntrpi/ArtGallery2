@@ -1,0 +1,20 @@
+﻿@model ArtGallery2.Models.Inventory.TechniqueDto
+
+<div>
+    <h4>Technique</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.techniqueName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.techniqueName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.techniqueId }) |
+    @Html.ActionLink("Back to List", "List")
+</p>
